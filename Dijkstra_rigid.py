@@ -58,43 +58,39 @@ def square_obstacle(clearance, radius_rigid_robot, test_point_coord):
 	edge4 = point_wrt_line(test_point_coord,square_point_4,square_point_1)
 
 
-	print(edge1)
-	print(edge2)
-	print(edge3) 
-	print(edge4)
+	if (not(edge1 or edge2)) and (edge3 and edge4):
+		return True
+
+	else:
+		return False
+
+
+
+# def point_wrt_line(test_point_coord, line_point_1, line_point_2):
+# 	a = line_point_2[1]-line_point_1[1]
+# 	b = line_point_1[0]-line_point_2[0]
+# 	c = (line_point_2[1]*line_point_1[0])-(line_point_2[0]*line_point_1[1])
+
+# 	line = a*test_point_coord[0] + b*test_point_coord[1] + c
+
+# 	if line>=0:
+# 		return True #on the left of the line, or on the line
+
+# 	else:
+# 		return False #D<0, on right of the line
 
 
 def point_wrt_line(test_point_coord, line_point_1, line_point_2):
-	a = line_point_2[1]-line_point_1[1]
-	b = line_point_1[0]-line_point_2[0]
-	c = (line_point_2[1]*line_point_1[0])-(line_point_2[0]*line_point_1[1])
+	slope = (line_point_2[1]-line_point_1[1])/(line_point_2[0]-line_point_1[0])
+	intercept = line_point_1[1]-(slope*line_point_1[0])
+	#print(slope,intercept)
 
-	line = a*test_point_coord[0] + b*test_point_coord[1] + c
-
+	line = test_point_coord[1] - (slope*test_point_coord[0]) - intercept
 	if line>=0:
 		return True #on the left of the line, or on the line
 
 	else:
 		return False #D<0, on right of the line
-
-
-
-
-
-
-# def point_wrt_line(test_point_coord, line_point_1, line_point_2):
-
-# 	D = ((line_point_2[0]-line_point_1[0])*(test_point_coord[1]-line_point_1[1])) - 
-# 		((test_point_coord[0]-line_point_1[0])*(line_point_2[1]-line_point_1[0]))
-
-
-	# if D>=0:
-	# 	return True #on the left of the line, or on the line
-
-	# else:
-	# 	return False #D<0, on right of the line
-
-
 
 
 
