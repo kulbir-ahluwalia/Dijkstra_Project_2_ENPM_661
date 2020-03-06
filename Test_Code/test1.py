@@ -4,20 +4,20 @@ from math import sqrt
 show_animation = True
 
 class Dijkstra:
-    def __init__(self, ox, oy, resolution, radius, clearance):
+    def __init__(self, ox, oy, radius, clearance):
         self.min_x = 0
         self.min_y = 0
         self.max_x = 300
         self.max_y = 200
-        self.x_width = None
-        self.y_width = None
+        self.grid_size = 4
+        self.x_width = 300/4
+        self.y_width = 200/4
         self.obstacle_map = None
 
-        self.resolution = resolution #grid resolution
-        self.radius = radius  #robot radius
+        self.radius = radius   #robot radius
         self.clearance = clearance  #clearance for obstacles
-        self.calc_obstacle_map(ox, oy) #position list of obstacles
-        self.motion = self.motion_model()
+        self.motion_model()    #8 motions
+        self.calc_obstacle_map(ox, oy)  #position list of obstacles
 
     class Node:
         def __init__(self, x, y, cost, parent):
@@ -58,12 +58,13 @@ class Dijkstra:
             # print("The key with the smallest cost:", c_node)
             # print("The smallest cost:", empty_set[c_node])
             # print(empty_set)
+
             # show animation
             if show_animation:
                 plt.plot(self.calc_position(current.x, self.min_x),
                          self.calc_position(current.y, self.min_y), ".y")
-                if len(visited_set.keys()) % 1 == 0:      # control the speed of animation
-                    plt.pause(0.001)
+                if len(visited_set.keys()) % 5 == 0:      # control the speed of animation by pauses
+                    plt.pause(0.0001)
 
             if current.x == goal_node.x and current.y == goal_node.y:
                 print("Find goal")
@@ -71,12 +72,11 @@ class Dijkstra:
                 goal_node.cost = current.cost
                 break
 
-
             del empty_set[c_node]      # Remove the item from the empty set
             visited_set[c_node] = current   # Add it to the visited set
 
             # expand search grid based on motion model
-            for move_x, move_y, move_cost in self.motion:
+            for move_x, move_y, move_cost in self.motion_model():
                 node = self.Node(current.x + move_x,
                                  current.y + move_y,
                                  current.cost + move_cost, c_node)
@@ -85,15 +85,15 @@ class Dijkstra:
                 if n_node in visited_set:
                     continue
 
-                if n_node not in empty_set:
-                    empty_set[n_node] = node  # Discover a new node
-
                 if not self.verify_node(node):
                     continue
 
+                if n_node not in empty_set:
+                    empty_set[n_node] = node  # Discover a new node
+
                 else:
                     if empty_set[n_node].cost >= node.cost:
-                        empty_set[n_node] = node
+                        empty_set[n_node] = node    #update the node if find a lower cost
 
         rx, ry = self.calc_final_path(goal_node, visited_set)
 
@@ -102,25 +102,24 @@ class Dijkstra:
     def calc_final_path(self, goal_node, visited_set):  #Generate path
         rx, ry = [self.calc_position(goal_node.x, self.min_x)], [self.calc_position(goal_node.y, self.min_y)]
         parent = goal_node.parent
-        while parent != -1: #########
+        while parent != -1:
             n = visited_set[parent]
             rx.append(self.calc_position(n.x, self.min_x))
             ry.append(self.calc_position(n.y, self.min_y))
             parent = n.parent
-
         return rx, ry
 
     def calc_position(self, index, minp):
-        pos = index * self.resolution + minp
-        return pos
+        position = index * self.grid_size + minp
+        return position
 
     def calc_xy_index(self, position, minp):
-        return round((position - minp) / self.resolution)
+        return round((position - minp) / self.grid_size)
 
     def calc_index(self, node):
         return (node.y - self.min_y) * self.x_width + (node.x - self.min_x)
 
-    def verify_node(self, node):
+    def verify_node(self, node):   #check the model for obstacles
         px = self.calc_position(node.x, self.min_x)
         py = self.calc_position(node.y, self.min_y)
 
@@ -139,23 +138,11 @@ class Dijkstra:
         return True
 
     def calc_obstacle_map(self, ox, oy):
-
-        # self.min_x = round(min(ox))
-        # self.min_y = round(min(oy))
-        # self.max_x = round(max(ox))
-        # self.max_y = round(max(oy))
-
-        self.x_width = round((self.max_x - self.min_x) / self.resolution)
-        self.y_width = round((self.max_y - self.min_y) / self.resolution)
-        # print("x_width:", self.x_width)
-        # print("y_width:", self.y_width)
-
-        # obstacle map generation
-        self.obstacle_map = [[False for _ in range(self.y_width)]
-                             for _ in range(self.x_width)]
-        for ix in range(self.x_width):
+        self.obstacle_map = [[False for _ in range(0, 50)]
+                             for _ in range(0, 75)]
+        for ix in range(0, 75):
             x = self.calc_position(ix, self.min_x)
-            for iy in range(self.y_width):
+            for iy in range(0, 50):
                 y = self.calc_position(iy, self.min_y)
                 for iox, ioy in zip(ox, oy):
                     d = sqrt((iox - x)**2 + (ioy - y)**2)
@@ -176,18 +163,7 @@ class Dijkstra:
 
         return motion
 
-
 def main():
-
-    # start and goal position
-    sx = int(input("Enter the starting point x: \n"))
-    sy = int(input("Enter the starting point y: \n"))
-    gx = int(input("Enter the goal point x: \n"))
-    gy = int(input("Enter the goal point y: \n"))
-    resolution = 4
-    radius = 2
-    clearance = 2
-
     # set obstacle positions
     ox, oy = [], []
     for i in range(0, 300):
@@ -203,6 +179,13 @@ def main():
         ox.append(0)
         oy.append(i)
 
+    # start and goal position and radius and clearance
+    sx = int(input("Enter the starting point x(Min allowed = 0): \n"))
+    sy = int(input("Enter the starting point y(Min allowed = 0): \n"))
+    gx = int(input("Enter the goal point x(Max allowed = 300): \n"))
+    gy = int(input("Enter the goal point y(Max allowed = 200): \n"))
+    radius = 2
+    clearance = 2
 
     if show_animation:  # pragma: no cover
         plt.plot(ox, oy, ".k")
@@ -211,7 +194,7 @@ def main():
         plt.grid(False)
         plt.axis("equal")
 
-    dijkstra = Dijkstra(ox, oy, resolution, radius, clearance)
+    dijkstra = Dijkstra(ox, oy, radius, clearance)
     rx, ry = dijkstra.planning(sx, sy, gx, gy)
 
     if show_animation:  # pragma: no cover
