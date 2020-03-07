@@ -53,47 +53,51 @@ class Dijkstra:
         empty_set[self.calc_index(start_node)] = start_node
 
         while 1:
-            c_node = min(empty_set, key=lambda c: empty_set[c].cost)   #the key whose value is the smallest
-            current = empty_set[c_node]
+
             # print("The key with the smallest cost:", c_node)
             # print("The smallest cost:", empty_set[c_node])
             # print(empty_set)
-
+            # if empty_set == None:
+            #     print("Goal Can't be reached")
+            #     break
             # show animation
             if show_animation:
+                curr_node = min(empty_set, key=lambda c: empty_set[c].cost)  # the key whose value is the smallest
+                current = empty_set[curr_node]
                 plt.plot(self.calc_position(current.x, self.min_x),
                          self.calc_position(current.y, self.min_y), ".y")
                 if len(visited_set.keys()) % 5 == 0:      # control the speed of animation by pauses
                     plt.pause(0.0001)
 
+
             if current.x == goal_node.x and current.y == goal_node.y:
-                print("Find goal")
+                print("Find Goal")
                 goal_node.parent = current.parent
                 goal_node.cost = current.cost
                 break
 
-            del empty_set[c_node]      # Remove the item from the empty set
-            visited_set[c_node] = current   # Add it to the visited set
+            del empty_set[curr_node]      # Remove the item from the empty set
+            visited_set[curr_node] = current   # Add it to the visited set
 
             # expand search grid based on motion model
             for move_x, move_y, move_cost in self.motion_model():
                 node = self.Node(current.x + move_x,
                                  current.y + move_y,
-                                 current.cost + move_cost, c_node)
-                n_node = self.calc_index(node)
+                                 current.cost + move_cost, curr_node)
+                new_node = self.calc_index(node)
 
-                if n_node in visited_set:
+                if new_node in visited_set:
                     continue
 
                 if not self.verify_node(node):
                     continue
 
-                if n_node not in empty_set:
-                    empty_set[n_node] = node  # Discover a new node
+                if new_node not in empty_set:
+                    empty_set[new_node] = node  # Discover a new node
 
                 else:
-                    if empty_set[n_node].cost >= node.cost:
-                        empty_set[n_node] = node    #update the node if find a lower cost
+                    if empty_set[new_node].cost >= node.cost:
+                        empty_set[new_node] = node    #update the node if find a lower cost
 
         rx, ry = self.calc_final_path(goal_node, visited_set)
 
@@ -110,8 +114,7 @@ class Dijkstra:
         return rx, ry
 
     def calc_position(self, index, minp):
-        position = index * self.grid_size + minp
-        return position
+        return index * self.grid_size + minp
 
     def calc_xy_index(self, position, minp):
         return round((position - minp) / self.grid_size)
@@ -131,15 +134,14 @@ class Dijkstra:
             return False
         if py >= self.max_y:
             return False
-
         if self.obstacle_map[node.x][node.y]:
             return False
-
-        return True
+        else:
+            return True
 
     def calc_obstacle_map(self, ox, oy):
-        self.obstacle_map = [[False for _ in range(0, 50)]
-                             for _ in range(0, 75)]
+        self.obstacle_map = [[False for j in range(0, 50)]
+                             for j in range(0, 75)]
         for ix in range(0, 75):
             x = self.calc_position(ix, self.min_x)
             for iy in range(0, 50):
@@ -178,14 +180,40 @@ def main():
     for i in range(0, 200):
         ox.append(0)
         oy.append(i)
+    for i in range(90, 110):
+        ox.append(i)
+        oy.append(40)
+    for i in range(90, 110):
+        ox.append(i)
+        oy.append(60)
+    for i in range(40, 60):
+        ox.append(90)
+        oy.append(i)
+    for i in range(40, 60):
+        ox.append(110)
+        oy.append(i)
+    # def circle(x, y, r):
+    #
+    #     for i in range(20):
+    #         jiao = float(i) / 20 * 2 * math.pi
+    #         x1 = x + r * math.cos(jiao)
+    #         y1 = y + r * math.sin(jiao)
+    #         ox.append(x1)
+    #         oy.append(y1)
+    #
+
+
+
+
+
 
     # start and goal position and radius and clearance
     sx = int(input("Enter the starting point x(Min allowed = 0): \n"))
     sy = int(input("Enter the starting point y(Min allowed = 0): \n"))
     gx = int(input("Enter the goal point x(Max allowed = 300): \n"))
     gy = int(input("Enter the goal point y(Max allowed = 200): \n"))
-    radius = 2
-    clearance = 2
+    radius = 3
+    clearance = 3
 
     if show_animation:  # pragma: no cover
         plt.plot(ox, oy, ".k")
