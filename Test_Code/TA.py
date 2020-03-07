@@ -309,17 +309,17 @@ def main():
         # if show_animation:
         list = dead.values()
         # print(len(list))
-        x=[]
-        y=[]
-        for i in range(len(list)):
-            x.append(list[i].x)
-            y.append(list[i].y)
+        # x=[]
+        # y=[]
+        # for i in range(len(list)):
+        #     x.append(list[i].x)
+        #     y.append(list[i].y)
 
         # print(list)
         plt.rcParams["figure.figsize"] = (250,150)
-        plt.plot(x,y,".c")
+        # plt.plot(x,y,".c")
         plt.plot(rx,ry,".r")
-        plt.plot(rx,ry,"-r")
+
         # plt.pause(5)
         plt.plot(nStart.x,nStart.y,"og")
         plt.plot(nGoal.x,nGoal.y,"ob")
