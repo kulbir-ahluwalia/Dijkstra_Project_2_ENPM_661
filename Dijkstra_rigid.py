@@ -54,7 +54,7 @@ def rectangle_obstacle(clearance, radius_rigid_robot, test_point_coord):
     #We set the flags by testing for a point inside the rectangle
     #Because the sign for the half plane is unique for every line, we test it by using a point that is confirmed to be inside the rectangle
     edge1_m_c = find_line_slope_and_intercept(test_point_coord,rectangle_point_1,rectangle_point_2)
-    line1 = test_point_coord[1] - (edge1_m_c[0]*test_point_coord[0]) - (edge1_m_c[1] + (augment_distance*0.5*(3**2)))
+    line1 = test_point_coord[1] - (edge1_m_c[0]*test_point_coord[0]) - (edge1_m_c[1] + (augment_distance*0.5*(3**0.5)))
     #print(line1)
     if line1>=0:
         flag1 = False
@@ -76,7 +76,7 @@ def rectangle_obstacle(clearance, radius_rigid_robot, test_point_coord):
     
     
     edge3_m_c = find_line_slope_and_intercept(test_point_coord,rectangle_point_3,rectangle_point_4)
-    line3 = test_point_coord[1] - (edge3_m_c[0]*test_point_coord[0]) - (edge3_m_c[1] - (augment_distance*0.5*(3**2)))
+    line3 = test_point_coord[1] - (edge3_m_c[0]*test_point_coord[0]) - (edge3_m_c[1] - (augment_distance*0.5*(3**0.5)))
     #print(line3)
     if line3>=0:
         flag3 = True
@@ -358,24 +358,11 @@ def obs():
     plt.imshow(a)
     plt.show() #to see plot
 
-
-
-
-
-
-
-
 def main():
     obs()
 
 if __name__=="__main__":
     main()
-
-
-
-
-
-
 
 
 # Running the Code and using all the functions we made:-
