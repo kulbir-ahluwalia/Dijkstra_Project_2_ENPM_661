@@ -324,46 +324,51 @@ def obs():
 
     r = 2
     c =2
-    print("Circle: ", rhombus_obstacle(r, c, [225, 25]))
+    # print("Circle: ", circular_obstacle(r, c, [225, 150]))
 
     for i in range(0,299):
         for j in range(0,199):
+            # print("For Loop")
             idx = cart2img([i,j])
-
-            if circular_obstacle(r,c,[idx[0],idx[1]])==True:
-                print("Circle: ",i,j)
-                a[j,i]=255
+            # print("Circle: ", circular_obstacle(r, c, [225, 150]))
+            if circular_obstacle(r,c,[idx[0],idx[1]]) == True:
+                # print("Circle: ",i,j)
+                a[j,i]=1
 
             if ellipsoid_obstacle(r,c,[idx[0],idx[1]])==True:
-                print("Circle: ",i,j)
-                a[j,i]=255
+                # print("Circle: ",i,j)
+                a[j,i]=1
 
             if rhombus_obstacle(r,c,[idx[0],idx[1]])==True:
-                print("Circle: ",i,j)
-                a[j,i]=255
+                # print("Circle: ",i,j)
+                a[j,i]=1
 
             if rectangle_obstacle(r,c,[idx[0],idx[1]])==True:
-                print("Circle: ",i,j)
-                a[j,i]=255
+                # print("Circle: ",i,j)
+                a[j,i]=1
 
             if nonconvex_obstacle_right_half(r,c,[idx[0],idx[1]])==True:
-                print("Circle: ",i,j)
-                a[j,i]=255
+                # print("Circle: ",i,j)
+                a[j,i]=1
 
             if nonconvex_obstacle_left_half(r, c, [idx[0], idx[1]]) == True:
-                print("Circle: ", i, j)
-                a[j, i] = 255
+                # print("Circle: ", i, j)
+                a[j, i] = 1
+            # a[np.where(a==255)]=True
+            # a[np.where(a==0)]=False
+    return a
 
-    a[np.where(a==255)]=True
-    a[np.where(a==0)]=False
-    plt.imshow(a)
-    plt.show() #to see plot
 
-def main():
-    obs()
-
-if __name__=="__main__":
-    main()
+    # plt.imshow(a)
+    # plt.show() #to see plot
+# #
+# def main():
+#     a = obs()
+#     plt.imshow(a)
+#     plt.show()
+# #
+# if __name__=="__main__":
+#     main()
 
 
 # Running the Code and using all the functions we made:-
