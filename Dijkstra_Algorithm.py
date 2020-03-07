@@ -1,10 +1,7 @@
-from math import sqrt
-import numpy as np
 import matplotlib.pyplot as plt
-import Obstacle_map_rigid as dr
-
+import math
+from math import sqrt
 show_animation = True
-import sys
 
 class Dijkstra:
     def __init__(self, ox, oy, radius, clearance):
@@ -46,9 +43,9 @@ class Dijkstra:
         """
 
         start_node = self.Node(self.calc_xy_index(sx, self.min_x),
-                               self.calc_xy_index(sy, self.min_y), 0, 0)
+                               self.calc_xy_index(sy, self.min_y), 0.0, -1)
         goal_node = self.Node(self.calc_xy_index(gx, self.min_x),
-                              self.calc_xy_index(gy, self.min_y), 0, 0)
+                              self.calc_xy_index(gy, self.min_y), 0.0, -1)
 
         empty_set = dict()
         visited_set = dict()
@@ -109,22 +106,21 @@ class Dijkstra:
     def calc_final_path(self, goal_node, visited_set):  #Generate path
         rx, ry = [self.calc_position(goal_node.x, self.min_x)], [self.calc_position(goal_node.y, self.min_y)]
         parent = goal_node.parent
-        while parent != 0:
+        while parent != -1:
             n = visited_set[parent]
             rx.append(self.calc_position(n.x, self.min_x))
             ry.append(self.calc_position(n.y, self.min_y))
             parent = n.parent
         return rx, ry
 
+    def calc_position(self, index, minp):
+        return index * self.grid_size + minp
+
+    def calc_xy_index(self, position, minp):
+        return round((position - minp) / self.grid_size)
+
     def calc_index(self, node):
         return (node.y - self.min_y) * self.x_width + (node.x - self.min_x)
-
-    def calc_position(self, index, min_p):
-        return index * self.grid_size + min_p
-
-    def calc_xy_index(self, position, min_p):
-        return (position - min_p) / self.grid_size
-
 
     def verify_node(self, node):   #check the model for obstacles
         px = self.calc_position(node.x, self.min_x)
@@ -140,28 +136,18 @@ class Dijkstra:
             return False
         if self.obstacle_map[node.x][node.y]:
             return False
-        # if self.obstacle_map[node.x][ node.y] == 1:
         else:
             return True
 
     def calc_obstacle_map(self, ox, oy):
-        # #self.obstacle_map = [[False for j in range(0, 50)]
-        #                      # for j in range(0, 75)]
-        # self.obstacle_map = dr.obs()
-        # # a = np.copy(self.obstacle_map)
-        # # a[np.where(a==255)]=True
-        # # a[np.where(a==0)]=False
-        # plt.imshow(self.obstacle_map,cmap="gray")
-        # plt.show()
-        # # sys.exit(0)
-
-
+        self.obstacle_map = [[False for j in range(0, 50)]
+                             for j in range(0, 75)]
         for ix in range(0, 75):
             x = self.calc_position(ix, self.min_x)
             for iy in range(0, 50):
                 y = self.calc_position(iy, self.min_y)
                 for iox, ioy in zip(ox, oy):
-                    d = sqrt((iox - x) ** 2 + (ioy - y) ** 2)
+                    d = sqrt((iox - x)**2 + (ioy - y)**2)
                     if d <= (self.radius + self.clearance):
                         self.obstacle_map[ix][iy] = True
                         break
@@ -194,18 +180,18 @@ def main():
     for i in range(0, 200):
         ox.append(0)
         oy.append(i)
-    # for i in range(90, 110):
-    #     ox.append(i)
-    #     oy.append(40)
-    # for i in range(90, 110):
-    #     ox.append(i)
-    #     oy.append(60)
-    # for i in range(40, 60):
-    #     ox.append(90)
-    #     oy.append(i)
-    # for i in range(40, 60):
-    #     ox.append(110)
-    #     oy.append(i)
+    for i in range(90, 110):
+        ox.append(i)
+        oy.append(40)
+    for i in range(90, 110):
+        ox.append(i)
+        oy.append(60)
+    for i in range(40, 60):
+        ox.append(90)
+        oy.append(i)
+    for i in range(40, 60):
+        ox.append(110)
+        oy.append(i)
     # def circle(x, y, r):
     #
     #     for i in range(20):
@@ -222,18 +208,12 @@ def main():
 
 
     # start and goal position and radius and clearance
-    # sx = int(input("Enter the starting point x(Min allowed = 0): \n"))
-    # sy = int(input("Enter the starting point y(Min allowed = 0): \n"))
-    # gx = int(input("Enter the goal point x(Max allowed = 300): \n"))
-    # gy = int(input("Enter the goal point y(Max allowed = 200): \n"))
-    sx = 90
-    sy = 90
-    gx = 100
-    gy = 100
-
-    radius = 0
-    clearance = 0
-
+    sx = int(input("Enter the starting point x(Min allowed = 0): \n"))
+    sy = int(input("Enter the starting point y(Min allowed = 0): \n"))
+    gx = int(input("Enter the goal point x(Max allowed = 300): \n"))
+    gy = int(input("Enter the goal point y(Max allowed = 200): \n"))
+    radius = 3
+    clearance = 3
 
     if show_animation:  # pragma: no cover
         plt.plot(ox, oy, ".k")
