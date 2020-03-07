@@ -1,7 +1,7 @@
 from math import sqrt
 import numpy as np
 import matplotlib.pyplot as plt
-import Dijkstra_rigid as dr
+import Obstacle_map_rigid as dr
 
 show_animation = True
 import sys
