@@ -6,7 +6,7 @@ def nonconvex_obstacle_left_half(clearance, radius_rigid_robot, test_point_coord
     nonconvex_point_1 = [50,150]
     nonconvex_point_2 = [60,185]
     nonconvex_point_3 = [25,185]
-    nonconvex_point_4 = [20,120]  
+    nonconvex_point_4 = [20,120]
     
     #We set the flags by testing for a point inside the rectangle
     #Because the sign for the half plane is unique for every line, we test it by using a point that is confirmed to be inside the nonconvex_obstacle
@@ -43,7 +43,7 @@ def nonconvex_obstacle_left_half(clearance, radius_rigid_robot, test_point_coord
         print("True")
     
     
-    edge4_m_c = find_line_slope_and_intercept(test_point_coord,nonconvex_point_4,nonconvex_point_5)
+    edge4_m_c = find_line_slope_and_intercept(test_point_coord,nonconvex_point_4,nonconvex_point_1)
     line4 = test_point_coord[1] - (edge4_m_c[0]*test_point_coord[0]) - (edge4_m_c[1] - (augment_distance*0.7071))
     #print(line4)
     if line4>=0:
@@ -57,3 +57,8 @@ def nonconvex_obstacle_left_half(clearance, radius_rigid_robot, test_point_coord
         return True
     else:
         return False
+
+
+
+
+

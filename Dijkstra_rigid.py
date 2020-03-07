@@ -2,6 +2,8 @@
 # Project 2 - Implementing Djikstra's Algorithm for a rigid robot
 # Team - Haixiang Fang          , UID - 116293242
 #        Kulbir Singh Ahluwalia , UID - 116836050
+import numpy as np
+import matplotlib.pyplot as plt
 
 def find_line_slope_and_intercept(test_point_coord, line_point_1, line_point_2):
     slope = (line_point_2[1]-line_point_1[1])/(line_point_2[0]-line_point_1[0])
@@ -32,7 +34,7 @@ def ellipsoid_obstacle(clearance, radius_rigid_robot, test_point_coord):
     semi_major_axis = 40
     semi_minor_axis = 20
 
-    distance_from_center = ((test_point_coord_x - ellipsoid_center[0])**2) / (semi_major_axis**2) + (test_point_coord_y - ellipsoid_center[1])**2 / (semi_minor_axis**2)
+    distance_from_center = ((test_point_coord_x - ellipsoid_center[0])**2) / ((semi_major_axis+augment_distance)**2) + (test_point_coord_y - ellipsoid_center[1])**2 / ((semi_minor_axis+augment_distance)**2)
 
     if distance_from_center > 1:
         return False
@@ -297,7 +299,94 @@ def test_point_obstacle_check(clearance, radius_rigid_robot, test_point_coord):
     else:
         return False
 
+def user_input():
+    radius_rigid_robot = int(input("Enter the radius of the rigid robot \n"))
+    clearance = int(input("Enter the desired clearance for the rigid robot\n"))
+    #Uncomment to choose different positions:-
+    start_node_x = int(input("Enter the starting x coordinate for the rigid robot\n"))
+    start_node_y = int(input("Enter the starting y coordinate for the rigid robot\n"))
+    goal_node_x = int(input("Enter the goal x coordinate for the rigid robot\n"))
+    goal_node_y = int(input("Enter the goal y coordinate for the rigid robot\n"))
 
+    opencv_start_node_y = 200- start_node_y
+    opencv_goal_node_y = 200 - goal_node_y
+
+    if (start_node_x < 0 and start_node_x > 300) and (goal_node_x < 0 and goal_node_x > 300):
+        print("X coordinate is out of range. Enter x from [0,300]. Restart program!")
+        exit(0)
+
+def cart2img(ix):
+    return [ix[0],200-ix[1]]
+
+def obs():
+    a = np.zeros((200,300),np.uint8)
+
+    r = 4
+    c = 4
+    print("Circle: ", rhombus_obstacle(r, c, [225, 25]))
+
+    for i in range(0,299):
+        for j in range(0,199):
+            idx = cart2img([i,j])
+
+            if circular_obstacle(r,c,[idx[0],idx[1]])==True:
+                print("Circle: ",i,j)
+                a[j,i]=255
+
+            if ellipsoid_obstacle(r,c,[idx[0],idx[1]])==True:
+                print("Circle: ",i,j)
+                a[j,i]=255
+
+            if rhombus_obstacle(r,c,[idx[0],idx[1]])==True:
+                print("Circle: ",i,j)
+                a[j,i]=255
+
+            if rectangle_obstacle(r,c,[idx[0],idx[1]])==True:
+                print("Circle: ",i,j)
+                a[j,i]=255
+
+            if nonconvex_obstacle_right_half(r,c,[idx[0],idx[1]])==True:
+                print("Circle: ",i,j)
+                a[j,i]=255
+
+            if nonconvex_obstacle_left_half(r, c, [idx[0], idx[1]]) == True:
+                print("Circle: ", i, j)
+                a[j, i] = 255
+
+    a[np.where(a==255)]=True
+    a[np.where(a==0)]=False
+    plt.imshow(a)
+    plt.show()
+
+
+
+
+
+
+
+
+def main():
+    obs()
+
+if __name__=="__main__":
+    main()
+
+
+
+
+
+
+
+
+# Running the Code and using all the functions we made:-
+# user_input()
+
+
+
+
+
+# print(test_point_obstacle_check(0,0,[230,40]))
+# print("supp")
 
 
 
