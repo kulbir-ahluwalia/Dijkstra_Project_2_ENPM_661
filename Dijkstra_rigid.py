@@ -356,7 +356,7 @@ def obs():
     a[np.where(a==255)]=True
     a[np.where(a==0)]=False
     plt.imshow(a)
-    plt.show()
+    plt.show() #to see plot
 
 
 
