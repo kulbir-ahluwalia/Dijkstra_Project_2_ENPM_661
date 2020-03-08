@@ -212,8 +212,8 @@ def main():
             continue
         else:
             break
-    radius = 0
-    clearance = 0
+    radius = 2
+    clearance = 2
 
     if show_animation:
 

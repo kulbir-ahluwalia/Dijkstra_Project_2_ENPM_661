@@ -356,24 +356,26 @@ def obs():
                 a[j, i] = 1
             # a[np.where(a==255)]=True
             # a[np.where(a==0)]=False
-    return a
+    return np.asarray(a)
 
 
-    # plt.imshow(a)
-    # plt.show() #to see plot
 # #
-# def main():
-#     a = obs()
 #     plt.imshow(a)
-#     plt.show()
-# #
-# if __name__=="__main__":
-#     main()
+#     plt.show() #to see plot
+
+#
+def main():
+    a = obs()
+    plt.imshow(a)
+    plt.show()
+
+if __name__=="__main__":
+    main()
 
 
 # Running the Code and using all the functions we made:-
 # user_input()
-
+#
 # print(test_point_obstacle_check(0,0,[230,40]))
 
 
