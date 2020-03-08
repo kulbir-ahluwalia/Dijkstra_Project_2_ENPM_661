@@ -508,8 +508,8 @@ def check_inputs_wrt_obstacles(start_node_x, start_node_y, goal_node_x, goal_nod
         exit(0)
 
 
-radius_rigid_robot = 0
-clearance = 0
+radius_rigid_robot = int(input("Enter the radius of the rigid robot \n"))
+clearance = int(input("Enter the desired clearance for the rigid robot\n"))
 # Uncomment to choose different positions:-
 start_node_x = int(input("Enter the starting x coordinate for the rigid robot\n"))
 start_node_y = int(input("Enter the starting y coordinate for the rigid robot\n"))
