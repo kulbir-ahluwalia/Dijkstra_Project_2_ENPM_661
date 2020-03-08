@@ -5,7 +5,7 @@
 1. Change the directory to the Code folder containing Dijkstra_rigid.py
 2. Type "python3 Dijkstra_rigid.py" in the terminal
 3. Enter the desired radius, clearance, start position and goal position.
-4. For example, the start and goal position is input as [5,5] and [295,195].
+4. For example, the start and goal position is input as [5,5] and [295,195] respectively.
 5. Wait for 40 seconds and then the animation will pop up. The cost and time to completion will also be printed.
 
 ## Libraries used in the code
