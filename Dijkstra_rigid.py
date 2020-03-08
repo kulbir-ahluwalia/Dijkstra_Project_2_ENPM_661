@@ -1,5 +1,5 @@
 # ENPM 661 - Planning for Autonomous Robots
-# Project 2 - Implementing Djikstra's Algorithm for imag rigid robot
+# Project 2 - Implementing Djikstra's Algorithm for rigid robot
 # Team - Haixiang Fang          , UID - 116293242
 #        Kulbir Singh Ahluwalia , UID - 116836050
 import numpy as np
