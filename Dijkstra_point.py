@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # ENPM 661 - Planning for Autonomous Robots
 # Project 2 - Implementing Djikstra's Algorithm for imag rigid robot
 # Team - Haixiang Fang          , UID - 116293242
@@ -869,4 +869,3 @@ def main():
 
 if __name__ == '__main__':
     main()
->>>>>>> a808d503847b2e829f342a4eeef5087fbb8f715a
