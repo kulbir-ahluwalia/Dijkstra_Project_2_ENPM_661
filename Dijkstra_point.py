@@ -10,16 +10,14 @@ import cv2
 from time import process_time
 
 
-def cart2img(adjust_coord):
+def cartesian_to_image_coord(adjust_coord):
     return [adjust_coord[0], 200 - adjust_coord[1]]
-
 
 def find_line_slope_and_intercept(test_point_coord, line_point_1, line_point_2):
     slope = (line_point_2[1] - line_point_1[1]) / (line_point_2[0] - line_point_1[0])
     intercept = line_point_1[1] - (slope * line_point_1[0])
     # print(slope,intercept)
     return slope, intercept
-
 
 # function returns false when the point is outside the circle
 def circular_obstacle(clearance, radius_rigid_robot, test_point_coord):
@@ -35,7 +33,6 @@ def circular_obstacle(clearance, radius_rigid_robot, test_point_coord):
         return False
     else:
         return True
-
 
 # function returns false when the point is outside the ellipse
 def ellipsoid_obstacle(clearance, radius_rigid_robot, test_point_coord):
@@ -54,7 +51,6 @@ def ellipsoid_obstacle(clearance, radius_rigid_robot, test_point_coord):
         return False
     else:
         return True
-
 
 def rectangle_obstacle(clearance, radius_rigid_robot, test_point_coord):
     circle_center = (225, 150)
@@ -114,7 +110,6 @@ def rectangle_obstacle(clearance, radius_rigid_robot, test_point_coord):
     else:
         return False
 
-
 def rhombus_obstacle(clearance, radius_rigid_robot, test_point_coord):
     augment_distance = radius_rigid_robot + clearance
 
@@ -161,7 +156,6 @@ def rhombus_obstacle(clearance, radius_rigid_robot, test_point_coord):
         return True
     else:
         return False
-
 
 def nonconvex_obstacle_right_half(clearance, radius_rigid_robot, test_point_coord):
     augment_distance = radius_rigid_robot + clearance
@@ -230,7 +224,6 @@ def nonconvex_obstacle_right_half(clearance, radius_rigid_robot, test_point_coor
     else:
         return False
 
-
 def nonconvex_obstacle_left_half(clearance, radius_rigid_robot, test_point_coord):
     augment_distance = radius_rigid_robot + clearance
 
@@ -287,7 +280,6 @@ def nonconvex_obstacle_left_half(clearance, radius_rigid_robot, test_point_coord
     else:
         return False
 
-
 def boundary_obstacle(clearance, radius_rigid_robot, test_point_coord):
     augment_distance = radius_rigid_robot + clearance
     x = test_point_coord[0]
@@ -304,16 +296,14 @@ def boundary_obstacle(clearance, radius_rigid_robot, test_point_coord):
     else:
         return False
 
-
 class GraphNode:
     def __init__(self, point):
         self.position = point
         self.cost = math.inf
         self.parent = None
 
-
 def test_point_obstacle_check(clearance, radius_rigid_robot, test_point_coord, image):
-    test_point_coord = cart2img(test_point_coord)
+    test_point_coord = cartesian_to_image_coord(test_point_coord)
     if circular_obstacle(clearance, radius_rigid_robot, test_point_coord):
         return True
     elif ellipsoid_obstacle(clearance, radius_rigid_robot, test_point_coord):
@@ -331,7 +321,6 @@ def test_point_obstacle_check(clearance, radius_rigid_robot, test_point_coord, i
     else:
         return False
 
-
 def action_up(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 1
     up_point_coord = [test_point_coord[0], test_point_coord[1] - 1]
@@ -341,7 +330,6 @@ def action_up(image, clearance, radius_rigid_robot, test_point_coord):
         return up_point_coord, action_cost
     else:
         return None, None
-
 
 def action_down(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 1
@@ -353,7 +341,6 @@ def action_down(image, clearance, radius_rigid_robot, test_point_coord):
     else:
         return None, None,
 
-
 def action_left(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 1
     left_point_coord = [test_point_coord[0] - 1, test_point_coord[1]]
@@ -363,7 +350,6 @@ def action_left(image, clearance, radius_rigid_robot, test_point_coord):
         return left_point_coord, action_cost
     else:
         return None, None
-
 
 def action_right(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 1
@@ -375,7 +361,6 @@ def action_right(image, clearance, radius_rigid_robot, test_point_coord):
     else:
         return None, None
 
-
 def action_up_right(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 2 ** 0.5
     up_right_point_coord = [test_point_coord[0] + 1, test_point_coord[1] - 1]
@@ -386,7 +371,6 @@ def action_up_right(image, clearance, radius_rigid_robot, test_point_coord):
     else:
         return None, None
 
-
 def action_down_right(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 2 ** 0.5
     down_right_point_coord = [test_point_coord[0] + 1, test_point_coord[1] + 1]
@@ -395,7 +379,6 @@ def action_down_right(image, clearance, radius_rigid_robot, test_point_coord):
         return down_right_point_coord, action_cost
     else:
         return None, None
-
 
 def action_up_left(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 2 ** 0.5
@@ -406,7 +389,6 @@ def action_up_left(image, clearance, radius_rigid_robot, test_point_coord):
     else:
         return None, None
 
-
 def action_down_left(image, clearance, radius_rigid_robot, test_point_coord):
     action_cost = 2 ** 0.5
     down_left_point_coord = [test_point_coord[0] - 1, test_point_coord[1] + 1]
@@ -416,7 +398,6 @@ def action_down_left(image, clearance, radius_rigid_robot, test_point_coord):
         return down_left_point_coord, action_cost
     else:
         return None, None
-
 
 def get_new_node(image, action, clearance, radius_rigid_robot, test_point_coord):
     action_map = {
@@ -432,14 +413,12 @@ def get_new_node(image, action, clearance, radius_rigid_robot, test_point_coord)
     }
     return action_map[action]
 
-
 def get_minimum_element(queue):
     min_index = 0
     for index in range(len(queue)):
         if queue[index].cost < queue[min_index].cost:
             min_index = index
     return queue.pop(min_index)
-
 
 def find_path_dijkstra(image, start_node_pos, goal_node_pos, clearance, radius_rigid_robot):
     start_node = GraphNode(start_node_pos)
@@ -508,7 +487,6 @@ def check_inputs_wrt_obstacles(start_node_x, start_node_y, goal_node_x, goal_nod
         print("Goal node is inside an obstacle. Enter some other coordinates. Restart program!")
         exit(0)
 
-
 radius_rigid_robot = 0
 clearance = 0
 # Uncomment to choose different positions:-
@@ -550,7 +528,7 @@ def plot_map(clearance, radius_rigid_robot):
     for i in range(0, 300):
         for j in range(0, 200):
             # print("For Loop")
-            idx = cart2img([i, j])
+            idx = cartesian_to_image_coord([i, j])
             # print("Circle: ", circular_obstacle(r, c, [225, 150]))
             if circular_obstacle(radius_rigid_robot, clearance, [idx[0], idx[1]]) == True:
                 # print("Circle: ",i,j)
@@ -582,7 +560,6 @@ def plot_map(clearance, radius_rigid_robot):
             # image[np.where(image==255)]=True
             # image[np.where(image==0)]=False
     return image
-
 
 def main():
     image = plot_map(clearance, radius_rigid_robot)
@@ -626,7 +603,6 @@ def main():
     plt.imshow(image)
     print(image)
     plt.show()
-
 
 if __name__ == "__main__":
     main()
