@@ -499,18 +499,19 @@ start_node_y = 200 - start_node_y
 goal_node_y = 200 - goal_node_y
 # for testing
 # start_node_x = 5
-# start_node_y = 10
+# start_node_y = 100
+
 # goal_node_x = 20
 # goal_node_y = 30
 # clearance = 2
 # radius_rigid_robot = 2
 
 
-if (start_node_x < 0 and start_node_x > 300) and (goal_node_x < 0 and goal_node_x > 300):
+if (start_node_x < 0 or start_node_x > 300) or (goal_node_x < 0 or goal_node_x > 300):
     print("X coordinate is out of range. Enter x from [0,300]. Restart program!")
     exit(0)
 
-if (start_node_y < 0 and start_node_y > 200) and (goal_node_y < 0 and goal_node_y > 200):
+if (start_node_y < 0 or start_node_y > 200) or (goal_node_y < 0 or goal_node_y > 200):
     print("Y coordinate is out of range. Enter y from [0,200]. Restart program!")
     exit(0)
 
